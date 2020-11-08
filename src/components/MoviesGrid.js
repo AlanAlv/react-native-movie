@@ -2,7 +2,9 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
-  Image
+  Image,
+  Text,
+  ScrollView
 } from 'react-native';
 import axios from 'axios';
 
@@ -22,30 +24,36 @@ const MoviesGrid = () => {
         callAPI();
     }, []);
 
+    const imageBaseUrl = `https://image.tmdb.org/t/p/`;
+    const imageSize = `w185`;
+
     return (  
         <>
-            <View 
-                style={styles.grid}
-            >
+            <ScrollView>
 
+                <View 
+                    style={styles.grid}
+                >
+                    {
 
-                <View style={styles.gridItem}>
-                    <Image 
-                        style={styles.poster}
-                        source={require('../../assets/img/movie2.jpg')}/>
-                </View>
-                <View style={styles.gridItem}>
-                    <Image 
-                        style={styles.poster}
-                        source={require('../../assets/img/movie3.jpg')}/>
-                </View>
-                <View style={styles.gridItem}>
-                    <Image 
-                        style={styles.poster}
-                        source={require('../../assets/img/movie4.jpg')}/>
-                </View>
+                    movies.length > 0 ? (
+                        movies.map(movie => (
 
-            </View>
+                            <View 
+                                key={movie.id} 
+                                style={styles.gridItem}
+                            >
+
+                                <Image 
+                                    style={styles.poster}
+                                    source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
+                            </View>
+                        ))
+                    ):
+                        <Text> Choose the movies to see </Text>
+                    }
+                </View>
+            </ScrollView>
             
         </>
     );
