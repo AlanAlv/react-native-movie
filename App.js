@@ -14,14 +14,26 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Movies"
+        screenOptions={{
+          headerStyle:{
+            backgroundColor: '#222222'
+          },
+          headerTintColor: '#FFF',
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          }
+        }}
       >
         <Stack.Screen 
           name="Movies"
           component={MoviesGrid}
         />
         <Stack.Screen 
-          name="Movie Details"
+          name="Movie_Details"
           component={MovieDetails}
+          options={({route}) => ({
+            title: route.params.title
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

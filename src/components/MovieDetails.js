@@ -9,27 +9,30 @@ import {
 
 
 
-const MovieDetails = () => {
+const MovieDetails = ({route}) => {
+    const {title, vote_average, release_date, overview, poster_path } = route.params;
+
+    const imageBaseUrl = `https://image.tmdb.org/t/p/`;
+    const imageSize = `w185`;
     return ( 
         <ScrollView>
             <View style={styles.header}>
-                <Text style={styles.title}>Kimetsu no Yaiba</Text>
+                <Text style={styles.title}>{title}</Text>
             </View>
             <View style={styles.grid}>
                 <View style={styles.gridItem}>
                     <Image 
                         style={styles.poster}
-                        source={{uri: `https://image.tmdb.org/t/p/w185/h8Rb9gBr48ODIwYUttZNYeMWeUU.jpg`}}
+                        source={{uri: `${imageBaseUrl}${imageSize}${poster_path}`}}
                     />
                 </View>
                 <View style={styles.gridItem}>
-                    <Text style={styles.label}>1999</Text>
-                    <Text style={styles.label}>9.4</Text>
-                    <Text style={styles.label}>120 mins</Text>
+                    <Text style={styles.label}>Rating: {vote_average}</Text>
+                    <Text style={styles.label}>{release_date}</Text>
                 </View>
             </View>
             <View>
-                <Text style={styles.synopsis}>Tanjirō Kamado, joined with Inosuke Hashibira, a boy raised by boars who wears a boar's head, and Zenitsu Agatsuma, a scared boy who reveals his true power when he sleeps, boards the Infinity Train on a new mission with the Fire Hashira, Kyōjurō Rengoku, to defeat a demon who has been tormenting the people and killing the demon slayers who oppose it!</Text>
+                <Text style={styles.synopsis}>{overview}</Text>
 
             </View>
         </ScrollView>
@@ -47,7 +50,7 @@ const styles=StyleSheet.create({
         flexBasis: '50%'
     },
     header: {
-        backgroundColor: '#139c7c',
+        backgroundColor: '#31453f',
         paddingHorizontal: 20,
         paddingVertical: 50,
         marginBottom: 10

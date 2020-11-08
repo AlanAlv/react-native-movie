@@ -8,7 +8,6 @@ import {
   TouchableHighlight
 } from 'react-native';
 import axios from 'axios';
-import MovieDetails from './MovieDetails';
 
 
 const MoviesGrid = ({navigation}) => {
@@ -29,8 +28,8 @@ const MoviesGrid = ({navigation}) => {
     const imageBaseUrl = `https://image.tmdb.org/t/p/`;
     const imageSize = `w185`;
 
-    displayDetails= () => {
-        navigation.navigate('Movie Details');
+    displayDetails= (movie) => {
+        navigation.navigate('Movie_Details', movie);
     }
     return (  
         <>
@@ -45,7 +44,7 @@ const MoviesGrid = ({navigation}) => {
                         movies.map(movie => (
 
                             <TouchableHighlight 
-                                onPress={() => displayDetails()}
+                                onPress={() => displayDetails(movie)}
                                 key={movie.id} 
                                 style={styles.gridItem}
                             >
