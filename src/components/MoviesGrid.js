@@ -4,12 +4,14 @@ import {
   StyleSheet,
   Image,
   Text,
-  ScrollView
+  ScrollView,
+  TouchableHighlight
 } from 'react-native';
 import axios from 'axios';
+import MovieDetails from './MovieDetails';
 
 
-const MoviesGrid = () => {
+const MoviesGrid = ({navigation}) => {
 
     const [movies, setMovies] = useState('');
  
@@ -27,6 +29,9 @@ const MoviesGrid = () => {
     const imageBaseUrl = `https://image.tmdb.org/t/p/`;
     const imageSize = `w185`;
 
+    displayDetails= () => {
+        navigation.navigate('Movie Details');
+    }
     return (  
         <>
             <ScrollView>
@@ -39,7 +44,8 @@ const MoviesGrid = () => {
                     movies.length > 0 ? (
                         movies.map(movie => (
 
-                            <View 
+                            <TouchableHighlight 
+                                onPress={() => displayDetails()}
                                 key={movie.id} 
                                 style={styles.gridItem}
                             >
@@ -47,7 +53,7 @@ const MoviesGrid = () => {
                                 <Image 
                                     style={styles.poster}
                                     source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
-                            </View>
+                            </TouchableHighlight>
                         ))
                     ):
                         <Text> Choose the movies to see </Text>
