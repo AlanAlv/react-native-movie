@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,17 +9,26 @@ import axios from 'axios';
 
 const MoviesGrid = () => {
 
+    const [movies, setMovies] = useState('');
+ 
+    useEffect(  () => {
+        const callAPI = async () => {
+            const url = 'https://api.themoviedb.org/3/movie/popular?api_key=b705275cbbfa9661ee41833d56b53b10';
+            const result = await axios.get(url);
+            setMovies(result.data.results);
+            console.log(result.data.results);
+            console.log(movies);
+        }
+        callAPI();
+    }, []);
 
     return (  
         <>
             <View 
                 style={styles.grid}
             >
-                <View style={styles.gridItem}>
-                    <Image 
-                        style={styles.poster}
-                        source={require('../../assets/img/movie1.jpg')}/>
-                </View>
+
+
                 <View style={styles.gridItem}>
                     <Image 
                         style={styles.poster}
