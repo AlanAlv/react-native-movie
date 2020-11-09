@@ -1,23 +1,39 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import {LanguageContext} from '../context/LanguageContext';
+
 
 const Footer = ({updateLanguage}) => {
+    const [language, setLanguage] =useContext(LanguageContext);
+
+    const updateLngES = () => {
+        updateLanguage();
+        setLanguage('&language=es');
+        console.log(language);
+    }
+
+    const updateLngEN = () => {
+        updateLanguage();
+        setLanguage('');
+        console.log(language);
+    }
+
     return (  
         <View style={styles.container}>
             <View style={styles.grid}>
-            <TouchableHighlight 
-                style={styles.gridItem}
-                onPress={() => updateLanguage('')}    
-            >
-                <Text style={styles.label}>English</Text>
-            </TouchableHighlight>
-            <TouchableHighlight 
-                style={styles.grid}
-                onPress={() => updateLanguage('&language=es')}
-            >
-                <Text style={styles.label}>Spanish</Text>
-            </TouchableHighlight>
+                <TouchableHighlight 
+                    style={styles.gridItem}
+                    onPress={() => updateLngEN() }    
+                >
+                    <Text style={styles.label}>English</Text>
+                </TouchableHighlight>
+                <TouchableHighlight 
+                    style={styles.gridItem}
+                    onPress={() => updateLngES()}
+                >
+                    <Text style={styles.label}>Español</Text>
+                </TouchableHighlight>
             </View>
 
         </View>
@@ -44,7 +60,7 @@ const styles= StyleSheet.create({
         flex:1
     },
     gridItem: {
-        flexBasis: '49%'
+        flexBasis: '80%'
     },
 });
  

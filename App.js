@@ -1,21 +1,23 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Button,
   View,
   Alert
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useIsFocused } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MoviesGrid from './src/components/MoviesGrid';
 import MovieDetails from './src/components/MovieDetails';
-import Footer from './src/components/Footer';
+import {LanguageContext, LanguageProvider} from './src/context/LanguageContext';
 
 const Stack = createStackNavigator();
 const App = () => {
 
   const [searchQuery, setSearchQuery] = useState('Popular');
   const [alertMessage, setAlertMessage] = useState('Top-Rating');
+  const [language, setLanguage] =useContext(LanguageContext);
+
 
   const changeQueryStates = () => {
     if(searchQuery === 'Popular'){
@@ -30,21 +32,21 @@ const App = () => {
   }
   const createAlert = ()  =>
     Alert.alert(
-    "Movie Classification ",
-    `Change order to ${alertMessage}?`,
+      language === '&language=es' ? "Clasificación de peliculas": "Movie Classification ",
+      language === '&language=es' ? `¿Cambiar orden a ${alertMessage}?`: `Change order to ${alertMessage}?`,
     [
         {
         text: "No",
-        onPress: () => console.log("Cancel Pressed"),
+        onPress: () => console.log(language),
         style: "cancel"
         },
-        { text: "Yes", onPress: () => changeQueryStates() }
+        { text: language === '&language=es' ? "Sí":"Yes", onPress: () => changeQueryStates() }
     ],
     { cancelable: false }
   );
 
   return (
-    <NavigationContainer>
+    <NavigationContainer>    
       <Stack.Navigator
         initialRouteName="Movies"
         screenOptions={{
@@ -58,9 +60,10 @@ const App = () => {
         }}
       >
         <Stack.Screen 
-          name={`${searchQuery} Movies`}
+          name={language === '&language=es' ? `Películas ${searchQuery}` : `${searchQuery} Movies`}
           component={MoviesGrid}
           initialParams={{searchQuery}}
+          screenProps={language}
           options={{
             headerRight: () => (
               <View style={{marginRight:10}} >
@@ -83,8 +86,16 @@ const App = () => {
           })}
         />
       </Stack.Navigator>
+
     </NavigationContainer>
+
     
 )};
 
-export default App;
+export default () => {
+  return (
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
+  )
+};

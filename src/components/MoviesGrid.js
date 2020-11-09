@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -12,15 +12,15 @@ import {
 import axios from 'axios';
 import MovieDetails from './MovieDetails';
 import Footer from './Footer';
+import {LanguageContext} from '../context/LanguageContext';
 
 
 const MoviesGrid = ({navigation, route}) => {
     const {searchQuery} = route.params;
-    console.log(searchQuery)
 
     const [movies, setMovies] = useState('');
     const [orientation, setOrientation] = useState("PORTRAIT");
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] =useContext(LanguageContext);
     const [call, setCall] = useState('true');
 
 
@@ -66,7 +66,7 @@ const MoviesGrid = ({navigation, route}) => {
             callAPI();
             setCall(false);
         }
-    }, [call]);
+    }, [call, language]);
 
     const imageBaseUrl = `https://image.tmdb.org/t/p/`;
     const imageSize = `w185`;
@@ -90,10 +90,10 @@ const MoviesGrid = ({navigation, route}) => {
         { cancelable: false }
     );
 
-    const updateLng = (language) => {
-        setLanguage(language);
+    const updateLng = () => {
+        //setLanguage(language);
         setCall(true);
-        console.log(language)
+        //console.log(language)
     }
 
         if(orientation === 'PORTRAIT'){
@@ -126,45 +126,48 @@ const MoviesGrid = ({navigation, route}) => {
                         </View>
 
                     </ScrollView>
-                    <Footer language={language} updateLanguage={updateLng}/>
+                    <Footer updateLanguage={updateLng}/>
                 </>
             );
         }
         else{
             return(
-                <ScrollView>
-        
-                <View 
-                    style={styles.grid}
-                >
-                    <View 
-                        style={styles.grid}
-                    >
-                        {
+                <>
+                    <ScrollView>
+                
+                        <View 
+                            style={styles.grid}
+                        >
+                            <View 
+                                style={styles.grid}
+                            >
+                                {
 
-                        movies.length > 0 ? (
-                            movies.map(movie => (
+                                movies.length > 0 ? (
+                                    movies.map(movie => (
 
-                                <TouchableHighlight 
-                                    onPress={() => displayDetails(movie)}
-                                    key={movie.id} 
-                                    style={styles.gridItem}
-                                >
+                                        <TouchableHighlight 
+                                            onPress={() => displayDetails(movie)}
+                                            key={movie.id} 
+                                            style={styles.gridItem}
+                                        >
 
-                                    <Image 
-                                        style={styles.poster}
-                                        source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
-                                </TouchableHighlight>
-                            ))
-                        ):
-                            <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
-                        }
-                    </View>
-                    <View style={styles.gridItem}>
-                        <MovieDetails route={{params: movies[0]}}/>
-                    </View>
-                </View>
-            </ScrollView>
+                                            <Image 
+                                                style={styles.poster}
+                                                source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
+                                        </TouchableHighlight>
+                                    ))
+                                ):
+                                    <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
+                                }
+                            </View>
+                            <View style={styles.gridItem}>
+                                <MovieDetails route={{params: movies[0]}}/>
+                            </View>
+                        </View>
+                    </ScrollView>
+                    <Footer updateLanguage={updateLng} />
+                </>
             )
         }
 }
