@@ -1,7 +1,9 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  View
+  Button,
+  View,
+  Alert
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,6 +12,36 @@ import MovieDetails from './src/components/MovieDetails';
 
 const Stack = createStackNavigator();
 const App = () => {
+
+  const [searchQuery, setSearchQuery] = useState('Popular');
+  const [alertMessage, setAlertMessage] = useState('Top-Rating');
+
+  const changeQueryStates = () => {
+    if(searchQuery === 'Popular'){
+      setSearchQuery('Top-Rating');
+      setAlertMessage('Popular');
+    }
+    else {
+      setSearchQuery('Popular');
+      setAlertMessage('Top-Rating');
+    }
+
+  }
+  const createAlert = ()  =>
+    Alert.alert(
+    "Movie Classification ",
+    `Change order to ${alertMessage}?`,
+    [
+        {
+        text: "No",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+        },
+        { text: "Yes", onPress: () => changeQueryStates() }
+    ],
+    { cancelable: false }
+  );
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -25,8 +57,22 @@ const App = () => {
         }}
       >
         <Stack.Screen 
-          name="Movies"
+          name={`${searchQuery} Movies`}
           component={MoviesGrid}
+          initialParams={{searchQuery}}
+          options={{
+            headerRight: () => (
+              <View style={{marginRight:10}} >
+              <Button
+                onPress={() => createAlert()}
+                title="⋮"
+                color="#31453f"
+                marginRight="10"
+                
+              />
+              </View>
+            ),
+          }}
         />
         <Stack.Screen 
           name="Movie_Details"

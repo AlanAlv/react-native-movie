@@ -14,7 +14,9 @@ import axios from 'axios';
 import MovieDetails from './MovieDetails';
 
 
-const MoviesGrid = ({navigation}) => {
+const MoviesGrid = ({navigation, route}) => {
+    const {searchQuery} = route.params;
+    console.log(searchQuery)
 
     const [movies, setMovies] = useState('');
     const [orientation, setOrientation] = useState("PORTRAIT");
@@ -33,7 +35,8 @@ const MoviesGrid = ({navigation}) => {
 
 
         const callAPI = async () => {
-            const url = 'https://api.themoviedb.org/3/movie/popular?api_key=b705275cbbfa9661ee41833d56b53b10';
+            const query = searchQuery === 'Popular' ? 'popular' : 'top_rated';
+            const url = `https://api.themoviedb.org/3/movie/${query}?api_key=b705275cbbfa9661ee41833d56b53b10`;
             const result = await axios.get(url)
             .catch(function (error) {
                 if (error.response) {
