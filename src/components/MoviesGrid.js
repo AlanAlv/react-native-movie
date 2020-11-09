@@ -6,16 +6,31 @@ import {
   Alert,
   ScrollView,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions,
+  Text
 } from 'react-native';
 import axios from 'axios';
+import MovieDetails from './MovieDetails';
 
 
 const MoviesGrid = ({navigation}) => {
 
     const [movies, setMovies] = useState('');
+    const [orientation, setOrientation] = useState("PORTRAIT");
+
+
  
     useEffect(  () => {
+
+        Dimensions.addEventListener('change', ({window:{width,height}})=>{
+            if (width<height) {
+              setOrientation("PORTRAIT")
+            } else {
+              setOrientation("LANDSCAPE")
+            }
+        });
+
 
         const callAPI = async () => {
             const url = 'https://api.themoviedb.org/3/movie/popular?api_key=b705275cbbfa9661ee41833d56b53b10';
@@ -68,37 +83,76 @@ const MoviesGrid = ({navigation}) => {
         { cancelable: false }
     );
 
-    return (  
-        <>
-            <ScrollView>
-
+        if(orientation === 'PORTRAIT'){
+            return (  
+                <>
+                    <ScrollView>
+        
+                        <View 
+                            style={styles.grid}
+                        >
+                            {
+        
+                            movies.length > 0 ? (
+                                movies.map(movie => (
+        
+                                    <TouchableHighlight 
+                                        onPress={() => displayDetails(movie)}
+                                        key={movie.id} 
+                                        style={styles.gridItem}
+                                    >
+        
+                                        <Image 
+                                            style={styles.poster}
+                                            source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
+                                    </TouchableHighlight>
+                                ))
+                            ):
+                                <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
+                            }
+                        </View>
+                    </ScrollView>
+                    
+                </>
+            );
+        }
+        else{
+            return(
+                <ScrollView>
+        
                 <View 
                     style={styles.grid}
                 >
-                    {
+                    <View 
+                        style={styles.grid}
+                    >
+                        {
 
-                    movies.length > 0 ? (
-                        movies.map(movie => (
+                        movies.length > 0 ? (
+                            movies.map(movie => (
 
-                            <TouchableHighlight 
-                                onPress={() => displayDetails(movie)}
-                                key={movie.id} 
-                                style={styles.gridItem}
-                            >
+                                <TouchableHighlight 
+                                    onPress={() => displayDetails(movie)}
+                                    key={movie.id} 
+                                    style={styles.gridItem}
+                                >
 
-                                <Image 
-                                    style={styles.poster}
-                                    source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
-                            </TouchableHighlight>
-                        ))
-                    ):
-                        <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
-                    }
+                                    <Image 
+                                        style={styles.poster}
+                                        source={{uri: `${imageBaseUrl}${imageSize}${movie.poster_path}`}}/>
+                                </TouchableHighlight>
+                            ))
+                        ):
+                            <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
+                        }
+                    </View>
+                    <View style={styles.gridItem}>
+                        <MovieDetails route={{params: movies[0]}}/>
+                    </View>
                 </View>
             </ScrollView>
-            
-        </>
-    );
+            )
+        }
 }
  
 const styles = StyleSheet.create({
@@ -109,6 +163,9 @@ const styles = StyleSheet.create({
         flex:1
     },
     gridItem: {
+        flexBasis: '50%'
+    },
+    gridItemLandscape: {
         flexBasis: '50%'
     },
     poster: {
