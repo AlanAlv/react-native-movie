@@ -5,7 +5,8 @@ import {
   Image,
   Text,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
+  ActivityIndicator
 } from 'react-native';
 import axios from 'axios';
 
@@ -18,9 +19,9 @@ const MoviesGrid = ({navigation}) => {
         const callAPI = async () => {
             const url = 'https://api.themoviedb.org/3/movie/popular?api_key=b705275cbbfa9661ee41833d56b53b10';
             const result = await axios.get(url);
+
             setMovies(result.data.results);
-            console.log(result.data.results);
-            console.log(movies);
+
         }
         callAPI();
     }, []);
@@ -55,7 +56,7 @@ const MoviesGrid = ({navigation}) => {
                             </TouchableHighlight>
                         ))
                     ):
-                        <Text> Choose the movies to see </Text>
+                        <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
                     }
                 </View>
             </ScrollView>
@@ -77,6 +78,11 @@ const styles = StyleSheet.create({
     poster: {
         width: '100%',
         height: 200,
+    },
+    spinner: {
+        marginTop: 50,
+        alignItems: 'center',
+        flex:1
     }
 });
 export default MoviesGrid;
