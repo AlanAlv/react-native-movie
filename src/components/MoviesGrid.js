@@ -7,11 +7,11 @@ import {
   ScrollView,
   TouchableHighlight,
   ActivityIndicator,
-  Dimensions,
-  Text
+  Dimensions
 } from 'react-native';
 import axios from 'axios';
 import MovieDetails from './MovieDetails';
+import Footer from './Footer';
 
 
 const MoviesGrid = ({navigation, route}) => {
@@ -20,6 +20,8 @@ const MoviesGrid = ({navigation, route}) => {
 
     const [movies, setMovies] = useState('');
     const [orientation, setOrientation] = useState("PORTRAIT");
+    const [language, setLanguage] = useState('');
+    const [call, setCall] = useState('true');
 
 
  
@@ -33,10 +35,10 @@ const MoviesGrid = ({navigation, route}) => {
             }
         });
 
-
+        
         const callAPI = async () => {
             const query = searchQuery === 'Popular' ? 'popular' : 'top_rated';
-            const url = `https://api.themoviedb.org/3/movie/${query}?api_key=b705275cbbfa9661ee41833d56b53b10`;
+            const url = `https://api.themoviedb.org/3/movie/${query}?api_key=b705275cbbfa9661ee41833d56b53b10${language}`;
             const result = await axios.get(url)
             .catch(function (error) {
                 if (error.response) {
@@ -60,9 +62,11 @@ const MoviesGrid = ({navigation, route}) => {
             
 
         }
-        callAPI();
-
-    }, []);
+        if (call){
+            callAPI();
+            setCall(false);
+        }
+    }, [call]);
 
     const imageBaseUrl = `https://image.tmdb.org/t/p/`;
     const imageSize = `w185`;
@@ -85,6 +89,12 @@ const MoviesGrid = ({navigation, route}) => {
         ],
         { cancelable: false }
     );
+
+    const updateLng = (language) => {
+        setLanguage(language);
+        setCall(true);
+        console.log(language)
+    }
 
         if(orientation === 'PORTRAIT'){
             return (  
@@ -114,8 +124,9 @@ const MoviesGrid = ({navigation, route}) => {
                                 <ActivityIndicator style={styles.spinner} size="large" color="#222222"/> 
                             }
                         </View>
+
                     </ScrollView>
-                    
+                    <Footer language={language} updateLanguage={updateLng}/>
                 </>
             );
         }

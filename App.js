@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MoviesGrid from './src/components/MoviesGrid';
 import MovieDetails from './src/components/MovieDetails';
+import Footer from './src/components/Footer';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -83,6 +84,7 @@ const App = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    
 )};
 
 export default App;
