@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   Image,
-  Text,
+  Alert,
   ScrollView,
   TouchableHighlight,
   ActivityIndicator
@@ -16,14 +16,34 @@ const MoviesGrid = ({navigation}) => {
     const [movies, setMovies] = useState('');
  
     useEffect(  () => {
+
         const callAPI = async () => {
             const url = 'https://api.themoviedb.org/3/movie/popular?api_key=b705275cbbfa9661ee41833d56b53b10';
-            const result = await axios.get(url);
+            const result = await axios.get(url)
+            .catch(function (error) {
+                if (error.response) {
+                   // Request made and server responded
+                    createAlert(error.response.data.status_message);
+                    console.log(error.response);
+
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    createAlert(error.request)
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    createAlert(error.message)
+                    console.log('Error', error.message);
+                }
+            
+              });
 
             setMovies(result.data.results);
+            
 
         }
         callAPI();
+
     }, []);
 
     const imageBaseUrl = `https://image.tmdb.org/t/p/`;
@@ -32,6 +52,22 @@ const MoviesGrid = ({navigation}) => {
     displayDetails= (movie) => {
         navigation.navigate('Movie_Details', movie);
     }
+
+    const createAlert = error =>
+        Alert.alert(
+        "There was an error",
+        error,
+        [
+            {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+    );
+
     return (  
         <>
             <ScrollView>
@@ -77,7 +113,7 @@ const styles = StyleSheet.create({
     },
     poster: {
         width: '100%',
-        height: 200,
+        height: 250,
     },
     spinner: {
         marginTop: 50,

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -62,7 +62,8 @@ const styles=StyleSheet.create({
     }, 
     poster: {
         width: '100%',
-        height: 200
+        height: 250,
+        marginLeft: 10
     },
     label: {
         color: '#5E5E5E',
